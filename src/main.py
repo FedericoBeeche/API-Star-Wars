@@ -36,6 +36,19 @@ def getAllUsers():
     all_users = list(map(lambda x: x.serialize(), all_users))
     return jsonify(all_users), 200
 
+@app.route('/user/<int:id>', methods=['GET'])
+def getSingleUser():
+    user = User.query.all()
+    user = list(map(lambda x: x.serialize(), user))
+    return jsonify(user), 200
+
+@app.route('/user/<int:id>', methods=['DELETE'])
+def deleteUsers():
+    person = User.query.get(id)
+    person.delete()
+    db.session.commit()
+    return jsonify(person), 200
+
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

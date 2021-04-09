@@ -37,17 +37,45 @@ def getAllUsers():
     return jsonify(all_users), 200
 
 @app.route('/user/<int:id>', methods=['GET'])
-def getSingleUser():
-    user = User.query.all()
-    user = list(map(lambda x: x.serialize(), user))
-    return jsonify(user), 200
+def getSingleUser(id):
+    user = User.query.get(id)
+    return jsonify(user.serialize()), 200
+
+@app.route('/user', methods=['POST'])
+def createUser():
+    body = request.get_json()
+    user = User(username=body["username"], email=body["email"], name=body["name"], lastname=body["lastname"], password=body["password"])
+    db.session.add(user)
+    db.session.commit()
+    print("User has been created!", body)
+    return jsonify(body), 200
+
+@app.route('/user/<int:id>', methods=['PUT'])
+def updateUser(id):
+    body = request.get_json()
+    userToUpdate = User.query.get(id)
+    if userToUpdate is None:
+        raise APIException('User not found', status_code=404)
+
+    if "username" in body:
+        userToUpdate.username = body["username"]
+    if "name" in body:
+        userToUpdate.name = body["name"]
+    if "lastname" in body:
+        userToUpdate.lastname = body["lastname"]
+    if "email" in body:
+        userToUpdate.email = body["email"]
+    db.session.commit()
+    return("User has been updated correctly!")
 
 @app.route('/user/<int:id>', methods=['DELETE'])
-def deleteUsers():
-    person = User.query.get(id)
-    person.delete()
+def deleteUsers(id):
+    user = User.query.get(id)
+    if user is None:
+        raise APIException('User not found', status_code=404)
+    db.session.delete(user)
     db.session.commit()
-    return jsonify(person), 200
+    return("The user has been deleted")
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

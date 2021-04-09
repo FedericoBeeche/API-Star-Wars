@@ -170,7 +170,7 @@ def updateCharacter(id):
 
 @app.route('/character/<int:id>', methods=['DELETE'])
 def deleteCharacters(id):
-    character = Characters.query.get(id)
+    character = Character.query.get(id)
     if character is None:
         raise APIException('Character not found', status_code=404)
     db.session.delete(character)

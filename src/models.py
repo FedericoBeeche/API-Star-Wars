@@ -25,6 +25,21 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+class Favorites(db.Model):
+    __tablename__='favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "category": self.category,
+            "user_id": self.user_id
+        }
+
 class Planet(db.Model):
     __tablename__='planets'
     id = db.Column(db.Integer, primary_key = True)

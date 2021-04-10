@@ -25,7 +25,7 @@ CORS(app)
 setup_admin(app)
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.environ.get('FLASK_APP_KEY', 'ieRdBtErgri2301Fgwe') # Change this!
+app.config["JWT_SECRET_KEY"] = os.environ.get('FLASK_APP_KEY') # Change this!
 jwt = JWTManager(app)
 
 # Create a route to authenticate your users and return JWTs. The
